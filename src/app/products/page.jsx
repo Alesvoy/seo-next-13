@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 import { getProducts } from "../api/route";
 
 export default async function Page() {
@@ -9,7 +10,9 @@ export default async function Page() {
       <section>
         {products.map((product) => (
           <div key={product.id}>
-            <h2>{product.title}</h2>
+            <Link href={`/products/${product.id}`}>
+              <h2>{product.title}</h2>
+            </Link>
             <div>
               <Image
                 src={product.image}
@@ -26,3 +29,17 @@ export default async function Page() {
     </div>
   );
 }
+
+export async function generateStaticParams() {
+  const products = await getProducts();
+
+  return products.map((product) => ({
+    slug: product.slug,
+  }));
+}
+
+export const metadata = {
+  title: "Products",
+  description: "This is the products page!",
+  keywords: ["e-commerce", "store", "shopping"],
+};

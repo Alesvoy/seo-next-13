@@ -1,13 +1,6 @@
 import Image from "next/image";
-import { getProduct, getProducts } from "../../api/route";
-
-export async function generateStaticParams() {
-  const products = await getProducts();
-
-  return products.map((product) => ({
-    slug: product.slug,
-  }));
-}
+import Link from "next/link";
+import { getProduct } from "../../api/route";
 
 export default async function ProductPage({ params: { slug } }) {
   const product = await getProduct(slug);
@@ -25,6 +18,16 @@ export default async function ProductPage({ params: { slug } }) {
       </div>
       <p>{product.description}</p>
       <p>${product.price}</p>
+      <Link href="/products">Back</Link>
     </div>
   );
+}
+
+export async function generateMetadata({ params: { slug } }) {
+  const product = await getProduct(slug);
+
+  return {
+    title: product.title,
+    description: product.description,
+  };
 }
